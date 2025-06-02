@@ -9,7 +9,7 @@ from django.utils.dateparse import parse_duration
 from django.utils.encoding import force_text
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy as _l
-from form_utils.forms import BetterModelForm
+from qatrack.qatrack_core.forms import BetterModelForm
 
 from qatrack.attachments.models import Attachment
 from qatrack.qa import models as qa_models
@@ -412,6 +412,22 @@ class ServiceEventForm(BetterModelForm):
     class Meta:
 
         model = models.ServiceEvent
+        fields = [
+            'datetime_service',
+            'unit_field',
+            'service_area_field',
+            'service_type',
+            'service_status',
+            'problem_description',
+            'safety_precautions',
+            'work_description',
+            'duration_service_time',
+            'duration_lost_time',
+            'is_review_required',
+            'test_list_instance_initiated_by',
+            'service_event_related',
+            'include_for_scheduling',
+        ]
         fieldsets = [
             ('hidden_fields', {
                 'fields': ['test_list_instance_initiated_by', 'is_review_required', 'unit_field', 'service_area_field'],

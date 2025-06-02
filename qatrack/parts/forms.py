@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import ObjectDoesNotExist
 from django.utils.encoding import force_text
 from django.utils.translation import gettext as _
-from form_utils.forms import BetterModelForm
+from qatrack.qatrack_core.forms import BetterModelForm
 
 from qatrack.parts import models as p_models
 from qatrack.service_log import models as sl_models
