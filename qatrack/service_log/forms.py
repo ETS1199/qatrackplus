@@ -415,7 +415,9 @@ class ServiceEventForm(BetterModelForm):
         fields = [
             'datetime_service',
             'unit_field',
+            'unit_field_fake',
             'service_area_field',
+            'service_area_field_fake',
             'service_type',
             'service_status',
             'problem_description',
@@ -424,9 +426,14 @@ class ServiceEventForm(BetterModelForm):
             'duration_service_time',
             'duration_lost_time',
             'is_review_required',
+            'is_review_required_fake',
             'test_list_instance_initiated_by',
             'service_event_related',
+            'service_event_related_field',
+            'initiated_utc_field',
+            'service_event_template',
             'include_for_scheduling',
+            'qafollowup_comments',
         ]
         fieldsets = [
             ('hidden_fields', {
@@ -517,7 +524,7 @@ class ServiceEventForm(BetterModelForm):
             self.fields[field_name].title = g_link.description
 
             g_fields.append(field_name)
-        self._fieldsets.append(('g_link_fields', {'fields': g_fields}))
+        self.add_fieldset('g_link_fields', {'fields': g_fields})
 
         template = None
         if self.data.get('service_event_template'):

@@ -41,7 +41,3 @@ from qatrack.qatrack_core.forms import BetterModelForm
 class MyForm(BetterModelForm):
     ...
 ```
-
-### Known Issues
-
-None identified. The new implementation provides the same functionality as `django-form-utils` for our use cases. 

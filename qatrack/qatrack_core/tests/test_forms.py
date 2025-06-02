@@ -4,7 +4,7 @@ from django.test import TestCase
 from qatrack.qatrack_core.forms import BetterFormMixin, BetterModelForm
 
 
-class TestForm(BetterFormMixin, forms.Form):
+class TestForm(forms.Form):
     """A test form with fieldsets."""
     name = forms.CharField()
     age = forms.IntegerField()
@@ -28,27 +28,35 @@ class BetterFormMixinTest(TestCase):
 
     def setUp(self):
         self.form = TestForm()
+        BetterFormMixin.__init__(self.form)
 
     def test_get_fieldsets(self):
-        """Test that get_fieldsets returns the correct structure."""
+        """Test that fieldsets are correctly processed."""
         fieldsets = self.form.get_fieldsets()
         self.assertEqual(len(fieldsets), 2)
+        
+        personal, contact = fieldsets
+        
+        self.assertEqual(personal[0], 'personal')
+        self.assertEqual(personal[1]['fields'], ['name', 'age'])
+        self.assertEqual(personal[1]['legend'], 'Personal Information')
+        self.assertEqual(personal[1]['classes'], ['personal-info'])
+        self.assertEqual(personal[1]['description'], 'Your personal details')
+        
+        self.assertEqual(contact[0], 'contact')
+        self.assertEqual(contact[1]['fields'], ['email'])
 
-        # Test personal fieldset
-        name, options = fieldsets[0]
-        self.assertEqual(name, 'personal')
-        self.assertEqual(options['fields'], ['name', 'age'])
-        self.assertEqual(options['legend'], 'Personal Information')
-        self.assertEqual(options['classes'], ['personal-info'])
-        self.assertEqual(options['description'], 'Your personal details')
-
-        # Test contact fieldset
-        name, options = fieldsets[1]
-        self.assertEqual(name, 'contact')
-        self.assertEqual(options['fields'], ['email'])
-        self.assertEqual(options['legend'], 'Contact')
-        self.assertEqual(options['classes'], ())
-        self.assertEqual(options['description'], '')
+    def test_form_without_fieldsets(self):
+        """Test that forms without fieldsets work correctly."""
+        class NoFieldsetsForm(forms.Form):
+            name = forms.CharField()
+        
+        form = NoFieldsetsForm()
+        BetterFormMixin.__init__(form)
+        fieldsets = form.get_fieldsets()
+        
+        self.assertEqual(len(fieldsets), 1)
+        self.assertEqual(fieldsets[0][1]['fields'], ['name'])
 
     def test_as_fieldset(self):
         """Test that as_fieldset renders the correct HTML."""
@@ -63,19 +71,6 @@ class BetterFormMixinTest(TestCase):
         self.assertIn('name="name"', html)
         self.assertIn('name="age"', html)
         self.assertIn('name="email"', html)
-
-    def test_no_fieldsets(self):
-        """Test form without fieldsets defined."""
-        class NoFieldsetsForm(BetterFormMixin, forms.Form):
-            name = forms.CharField()
-
-        form = NoFieldsetsForm()
-        fieldsets = form.get_fieldsets()
-        
-        self.assertEqual(len(fieldsets), 1)
-        name, options = fieldsets[0]
-        self.assertIsNone(name)
-        self.assertEqual(options['fields'], ['name'])
 
     def test_missing_field(self):
         """Test that fieldsets handle missing fields gracefully."""

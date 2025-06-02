@@ -164,6 +164,7 @@ class PartForm(BetterModelForm):
 
     class Meta:
         model = p_models.Part
+        fields = ['name', 'part_number', 'alt_part_number', 'part_category', 'cost', 'new_or_used', 'quantity_min', 'notes', 'is_obsolete']
         if not settings.PARTS_ALLOW_BLANK_PART_NUM:
             required_fields = ['part_number', 'new_or_used', 'quantity_min']
             optional_fields = ['alt_part_number', 'part_category', 'cost', 'is_obsolete']

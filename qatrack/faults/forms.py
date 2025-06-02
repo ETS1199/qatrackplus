@@ -186,4 +186,4 @@ class ReviewFaultForm(BetterModelForm):
 
     class Meta:
         model = models.Fault
-        fields = []
+        fields = ['id']  # We need at least one field for the form to be valid

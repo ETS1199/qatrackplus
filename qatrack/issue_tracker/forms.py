@@ -11,6 +11,7 @@ class IssueForm(BetterModelForm):
 
     class Meta:
         model = i_models.Issue
+        fields = ['issue_type', 'issue_priority', 'issue_tags', 'description', 'error_screen']
         fieldsets = [
             ('hidden_fields', {
                 'fields': [],
