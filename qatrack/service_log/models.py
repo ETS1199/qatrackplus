@@ -90,7 +90,7 @@ class UnitServiceArea(models.Model):
         verbose_name = _l('unit service area')
         verbose_name_plural = _l('unit service area memberships')
         unique_together = ('unit', 'service_area',)
-        ordering = ('unit', 'service_area')
+        ordering = ("unit", _l("service_area"))
 
     def __str__(self):
         return '%s :: %s' % (self.unit.name, self.service_area.name)
@@ -187,7 +187,7 @@ class ServiceEventStatus(models.Model):
     class Meta:
         verbose_name = _l('service event status')
         verbose_name_plural = _l('service event statuses')
-        ordering = ("order", "pk")
+        ordering = ("order", _l("pk"))
 
     def save(self, *args, **kwargs):
         if self.is_default:
@@ -607,7 +607,7 @@ class GroupLinker(models.Model):
     )
 
     class Meta:
-        unique_together = ('name', 'group')
+        unique_together = ("name", "group")
         verbose_name = _l("group linker")
         verbose_name_plural = _l("group linkers")
 

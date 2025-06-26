@@ -22,13 +22,13 @@ class SavedReport(models.Model):
 
     FORMATS = [('pdf', _l('PDF')), ('xlsx', 'Excel'), ("csv", _l("CSV"))]
 
-    title = models.CharField(max_length=255, help_text=_l("Give your report a descriptive title"))
-    report_type = models.CharField(max_length=255)
-    report_format = models.CharField(max_length=4, choices=FORMATS, default=FORMATS[0][0])
+    title = models.CharField(max_length=255, verbose_name=_l("Report Title"), help_text=_l("Give your report a descriptive title"))
+    report_type = models.CharField(max_length=255, verbose_name=_l("Report Type"))
+    report_format = models.CharField(max_length=4, choices=FORMATS, default=FORMATS[0][0], verbose_name=_l("Report Format"))
     filters = models.JSONField(default=dict)
     include_signature = models.BooleanField(default=False)
     include_logo = models.BooleanField(default=True)
-    visible_to = models.ManyToManyField(Group, blank=True)
+    visible_to = models.ManyToManyField(Group, blank=True, verbose_name=_l("Visible to"))
 
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)

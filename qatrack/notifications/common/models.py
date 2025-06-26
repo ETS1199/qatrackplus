@@ -45,7 +45,7 @@ class RecipientGroup(models.Model):
     def recipient_emails(self):
         users = set(self.users.filter(is_active=True).exclude(email='').values_list("email", flat=True))
         group_users = set(
-            email for email, active in self.groups.values_list("user__email", "user__is_active") if active and email
+            email for email, active in self.groups.values_list("user__email", _l("user__is_active")) if active and email
         )
         emails = {x.strip() for x in self.emails.split(",") if x.strip()}
         return users | group_users | emails

@@ -147,7 +147,7 @@ class Room(models.Model):
 class StorageManager(models.Manager):
 
     def get_queryset(self):
-        return super(StorageManager, self).get_queryset().select_related('room', 'room__site').order_by('location')
+        return super(StorageManager, self).get_queryset().select_related("room", "room__site").order_by('location')
 
     def get_queryset_for_room(self, room):
         return super().get_queryset().filter(room=room).order_by('location')
@@ -296,7 +296,7 @@ class Part(models.Model):
     class Meta:
         ordering = ['part_number']
         unique_together = [
-            ('part_number', 'new_or_used'),
+            ("part_number", "new_or_used"),
         ]
 
     def __str__(self):
@@ -335,7 +335,7 @@ class PartStorageCollectionManager(models.Manager):
             'part',
             'storage__room',
             'storage__room__site',
-        ).order_by('-quantity', 'part__part_number')
+        ).order_by("-quantity", "part__part_number")
 
 
 class PartStorageCollection(models.Model):
@@ -361,7 +361,7 @@ class PartStorageCollection(models.Model):
     objects = PartStorageCollectionManager()
 
     class Meta:
-        unique_together = ('part', 'storage')
+        unique_together = ("part", "storage")
         default_permissions = ()
 
     def save(self, *args, **kwargs):

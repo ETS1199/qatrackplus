@@ -365,7 +365,7 @@ class FrequencyManager(models.Manager):
     """Provides a convenience method for grabbing available convenience slug/names"""
 
     def frequency_choices(self):
-        return self.get_queryset().values_list("slug", "name")
+        return self.get_queryset().values_list("slug", _l("name"))
 
     def get_by_natural_key(self, slug):
         return self.get(slug=slug)
@@ -855,7 +855,7 @@ class Test(models.Model, TestPackMixin):
         blank=True,
     )
     slug = models.SlugField(
-        verbose_name="Macro name", max_length=128,
+        verbose_name=_l("Macro name"), max_length=128,
         help_text=_l(
             "A short variable name consisting of alphanumeric characters and "
             "underscores for this test (to be used in composite calculations). "
@@ -1069,7 +1069,7 @@ class Test(models.Model, TestPackMixin):
         if not self.calculation_procedure and self.type not in CALCULATED_TYPES:
             return
 
-        self.calculation_procedure = str(self.calculation_procedure).replace("\r\n", "\n")
+        self.calculation_procedure = str(self.calculation_procedure).replace("\r\n", _l("\n"))
 
         macro_var_set = re.findall(r"^\s*%s\s*=.*$" % (self.slug), self.calculation_procedure, re.MULTILINE)
         result_line = self.RESULT_RE.findall(self.calculation_procedure)
@@ -1542,10 +1542,7 @@ class TestList(TestCollectionInterface, TestPackMixin):
     def ordered_tests(self):
         """return list of all tests/sublist tests in order"""
         if not hasattr(self, "_ordered_tests"):
-            tlms = self.testlistmembership_set.select_related(
-                "test",
-                "test__category"
-            )
+            tlms = self.testlistmembership_set.select_related("test", "test__category")
             tests = []
             for tlm in tlms:
                 tests.append((tlm.order, tlm.order, tlm.test))
@@ -1739,7 +1736,7 @@ class UnitTestCollection(SchedulingMixin, models.Model):
         verbose_name=_l("Tests collection"),
         help_text=_l("Choose the tests collection object to assign to the unit"),
     )
-    tests_object = GenericForeignKey("content_type", "object_id")
+    tests_object = GenericForeignKey("content_type", _l("object_id"))
     objects = UnitTestListManager()
     name = models.CharField(max_length=255, db_index=True, default='', editable=False)
 
@@ -1849,9 +1846,7 @@ class UnitTestCollection(SchedulingMixin, models.Model):
         all_tests = self.tests_object.all_tests()
         source_unit_test_infos = UnitTestInfo.objects.filter(
             test__in=all_tests, unit=self.unit
-        ).select_related(
-            "reference", "tolerance"
-        )
+        ).select_related("reference", "tolerance")
 
         for source_uti in source_unit_test_infos:
             UnitTestInfo.objects.filter(
@@ -2205,7 +2200,7 @@ class TestListInstanceManager(models.Manager):
 
     def unreviewed_count(self):
         # future note: doing something like:
-        # return len([v == (False, False) for v in self.get_queryset().values_list("in_progress", "all_reviewed")])
+        # return len([v == (False, False) for v in self.get_queryset().values_list("in_progress", _l("all_reviewed"))])
         # may be significantly faster for postgres than using count()
         return self.unreviewed().count()
 
@@ -2389,7 +2384,7 @@ class TestListInstance(models.Model):
         changed_se = []
         for rtsqa in self.rtsqa_for_tli.all():
             if not self.all_reviewed and rtsqa.service_event.service_status.rts_qa_must_be_reviewed:
-                rtsqa.service_event.service_status = apps.get_model('service_log', 'ServiceEventStatus').get_default()
+                rtsqa.service_event.service_status = apps.get_model("service_log", _l("ServiceEventStatus")).get_default()
                 rtsqa.service_event.save()
                 changed_se.append(rtsqa.service_event_id)
 
@@ -2439,7 +2434,7 @@ class TestListInstance(models.Model):
             dates.append((tli.get_absolute_url(), tli.work_completed))
 
         instances = []
-        # note sort  here rather than using self.testinstance_set.order_by(("order", "created")
+        # note sort  here rather than using self.testinstance_set.order_by(("order", _l("created"))
         # because that causes Django to requery db and negates the advantage of using
         # prefetch_related above
         test_instances = sorted(self.testinstance_set.all(), key=lambda x: (x.order, x.created))
@@ -2715,7 +2710,7 @@ class TestListCycleMembership(models.Model):
 
         # note the following won't actually work because when saving multiple
         # memberships they can have the same order temporarily when orders are changed
-        # unique_together = (("order", "cycle"),)
+        # unique_together = (("order", _l("cycle")),)
 
     @classmethod
     def get_testpack_fields(cls):

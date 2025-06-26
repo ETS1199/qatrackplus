@@ -324,7 +324,7 @@ class UnitAvailableTimeEdit(models.Model):
     class Meta:
         ordering = ['-date']
         get_latest_by = 'date'
-        unique_together = [('unit', 'date')]
+        unique_together = [("unit", "date")]
         default_permissions = ()
         verbose_name = _l("unit available time edit")
         verbose_name_plural = _l('unit available time edits')
@@ -350,7 +350,7 @@ class UnitAvailableTime(models.Model):
         ordering = ['-date_changed']
         default_permissions = ('change',)
         get_latest_by = 'date_changed'
-        unique_together = [('unit', 'date_changed')]
+        unique_together = [("unit", "date_changed")]
         verbose_name = _l("unit available time")
         verbose_name_plural = _l('unit available times')
 
